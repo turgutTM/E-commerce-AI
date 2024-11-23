@@ -1,13 +1,17 @@
 "use client";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { MdDeleteOutline } from "react-icons/md";
+import { removeFromCart } from "../features/ShopCart";
 
-const CartSidebar = ({ isOpen, onClose, cartItems, setCartItems }) => {
+const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
   const user = useSelector((state) => state.user.user);
+  const cartItems = useSelector((state) => state.ShopCart.cartItems);
   const router = useRouter();
   const [message, setMessage] = React.useState("");
+  const [deletingItemId, setDeletingItemId] = React.useState(null); // Silme animasyonu kontrolü
+  const dispatch = useDispatch();
 
   const handleFinishShop = () => {
     onClose();
@@ -24,27 +28,34 @@ const CartSidebar = ({ isOpen, onClose, cartItems, setCartItems }) => {
       return;
     }
 
-    try {
-      const response = await fetch("/api/delete-from-cart", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: user._id, productId }),
-      });
+    // Silme animasyonunu başlat
+    setDeletingItemId(productId);
 
-      if (response.ok) {
-        setCartItems((prevItems) =>
-          prevItems.filter((item) => item.id !== productId)
-        );
-      } else {
-        const data = await response.json();
-        setMessage(data.message || "Failed to delete item.");
+    setTimeout(async () => {
+      try {
+        // Redux ile öğeyi sil
+        dispatch(removeFromCart(productId));
+
+        const response = await fetch("/api/delete-from-cart", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: user._id, productId }),
+        });
+
+        // API yanıtı kontrolü
+        if (!response.ok) {
+          const data = await response.json();
+          setMessage(data.message || "Failed to delete item.");
+        }
+      } catch (error) {
+        console.error("Error deleting item:", error);
+        setMessage("Failed to delete item.");
+      } finally {
+        setDeletingItemId(null); // Animasyonu sıfırla
       }
-    } catch (error) {
-      console.error("Error deleting item:", error);
-      setMessage("Failed to delete item.");
-    }
+    }, 500); // Animasyon süresiyle uyumlu
   };
 
   return (
@@ -70,7 +81,9 @@ const CartSidebar = ({ isOpen, onClose, cartItems, setCartItems }) => {
             {cartItems.map((item) => (
               <li
                 key={item.id}
-                className="flex border-b-2 border-blue-100 py-2 justify-between items-center"
+                className={`flex border-b-2 border-blue-100 py-2 justify-between items-center transition-all duration-500 ${
+                  deletingItemId === item.id ? "opacity-50 blur-sm" : "opacity-100"
+                }`}
               >
                 <img
                   src={item.imgURL}

@@ -34,7 +34,8 @@ export const GET = async (request) => {
         imgURL: item.productId?.imgURL || "",
         price: item.productId?.price || 0,
         quantity: item.quantity,
-        discountedPrice: item.productId?.discountedPrice || item.discountedPrice || 0,
+        discountedPrice:
+          item.productId?.discountedPrice || item.discountedPrice || 0,
       }));
 
     return new NextResponse(JSON.stringify({ cartProducts }), {

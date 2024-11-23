@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
+
 const BlogSchema = new mongoose.Schema(
   {
     userID: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", 
       required: true,
     },
     category: {

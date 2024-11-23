@@ -9,8 +9,9 @@ import Campaings from "./components/Campaings";
 import LoginRegisterComponent from "./components/LoginRegisterComponent";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify"; 
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import TuguAnimation from "./components/TuguAnimation";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -21,7 +22,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!loggedinUser) {
-      router.push("/login"); 
+      router.push("/login");
     }
   }, [loggedinUser, router]);
 
@@ -54,12 +55,17 @@ export default function Home() {
     };
 
     fetchUserData();
+    
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }, []);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <ClipLoader color="#000" loading={loading} size={50} />
+        <TuguAnimation></TuguAnimation>
       </div>
     );
   }
@@ -68,7 +74,7 @@ export default function Home() {
 
   return (
     <div>
-      <ToastContainer autoClose={3000} position="top-right" /> 
+      <ToastContainer autoClose={3000} position="top-right" />
       <div className="flex flex-col">
         <Header />
         <FeaturedProducts />

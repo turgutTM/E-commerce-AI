@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import { UploadButton } from "../../utils/uploadthing";
+import TuguAnimation from "@/app/components/TuguAnimation";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -82,7 +83,7 @@ const Blogs = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <ClipLoader color="#3498db" size={50} />
+       <TuguAnimation></TuguAnimation>
       </div>
     );
   }

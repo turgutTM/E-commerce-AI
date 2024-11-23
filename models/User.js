@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
     },
     balance: {
       type: Number,
-      default: 10000, 
+      default: 10000,
     },
     cart: [
       {
@@ -85,7 +85,6 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
@@ -94,12 +93,11 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-
 UserSchema.methods.deductBalance = async function (amount) {
   if (this.balance >= amount) {
     this.balance -= amount;
     await this.save();
-    return true; 
+    return true;
   } else {
     throw new Error("Insufficient balance to complete the purchase.");
   }

@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import TuguAnimation from "@/app/components/TuguAnimation";
 
 const Blog = () => {
   const { id } = useParams();
@@ -77,7 +79,7 @@ const Blog = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <ClipLoader color="#000" loading={loading} size={50} />
+        <TuguAnimation></TuguAnimation>
       </div>
     );
   }
@@ -98,8 +100,13 @@ const Blog = () => {
 
       <h1 className="text-4xl font-bold text-gray-800 mb-2">{blog.title}</h1>
       <div className="text-[14px] text-gray-600 mb-6">
-        By @<span className="font-semibold">{blog.user.name}</span> on{" "}
-        {new Date(blog.createdAt).toLocaleDateString()}
+        By @
+        <Link href={`/blogs-user/${blog.user._id}`}>
+          <span className="font-semibold text-blue-600 hover:underline cursor-pointer">
+            {blog.user.name}
+          </span>
+        </Link>{" "}
+        on {new Date(blog.createdAt).toLocaleDateString()}
       </div>
 
       <div className="mb-6">

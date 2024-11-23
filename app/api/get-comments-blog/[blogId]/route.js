@@ -16,11 +16,10 @@ export const GET = async (request, { params }) => {
   try {
     await connect();
 
-    const blog = await Blog.findById(blogId)
-      .populate({
-        path: "comments.userId",
-        select: "profilePhoto name",
-      });
+    const blog = await Blog.findById(blogId).populate({
+      path: "comments.userId",
+      select: "profilePhoto name",
+    });
 
     if (!blog) {
       return new NextResponse(JSON.stringify({ message: "Blog not found" }), {
@@ -28,10 +27,9 @@ export const GET = async (request, { params }) => {
       });
     }
 
-   
     const commentsWithUserDetails = blog.comments.map((comment) => ({
-      profilePhoto: comment.userId ? comment.userId.profilePhoto : null, 
-      name: comment.userId ? comment.userId.name : "Unknown User", 
+      profilePhoto: comment.userId ? comment.userId.profilePhoto : null,
+      name: comment.userId ? comment.userId.name : "Unknown User",
       content: comment.content,
       createdAt: comment.createdAt,
     }));

@@ -13,3 +13,33 @@
     -ms-overflow-style: none;
   }
 }
+@keyframes moveToCart {
+  0% {
+    opacity: 1;
+    transform: translateY(80px) scale(1); 
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.5);
+  }
+}
+
+.animate-move-to-cart {
+  animation: moveToCart 0.8s ease-in-out forwards;
+}
+
+@keyframes cartIconGrow {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cart-icon-grow {
+  animation: cartIconGrow 0.5s ease-in-out;
+}

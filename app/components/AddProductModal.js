@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UploadButton } from "../utils/uploadthing";
+import { addProduct } from "../features/ProductSlice";
 
 const AddProductModal = ({ isOpen, onClose }) => {
   const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     imgURL: "",
     name: "",
@@ -57,6 +59,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
       }
 
       const newProduct = await response.json();
+      dispatch(addProduct(newProduct));
       console.log("Product created:", newProduct);
       onClose();
       setFormData({
