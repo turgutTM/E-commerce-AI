@@ -4,14 +4,14 @@ import User from "@/models/User";
 import Product from "@/models/Product";
 
 export const POST = async (request) => {
-  const { userId, productId, quantity } = await request.json();
-  console.log("Request body:", { userId, productId, quantity });
-  console.log("Type of quantity:", typeof quantity);
+  const { userId, productId, quantity, price } = await request.json();
+  console.log(userId,productId,quantity,price);
+  
 
-  if (!userId || !productId || quantity === undefined) {
+  if (!userId || !productId || quantity === undefined || price === undefined) {
     return new NextResponse(
       JSON.stringify({
-        message: "User ID, Product ID, and Quantity are required",
+        message: "User ID, Product ID, Quantity, and Price are required",
       }),
       { status: 400 }
     );
@@ -43,22 +43,23 @@ export const POST = async (request) => {
       (item) => item.productId.toString() === productId.toString()
     );
 
-      if (existingCartItem) {
-        if (existingCartItem.quantity + quantity > availableStock) {
-          return new NextResponse(
-            JSON.stringify({ message: "Not enough stock available" }),
-            { status: 400 }
-          );
-        }
-        existingCartItem.quantity += quantity;
-      } else {
-        if (quantity > availableStock) {
+    if (existingCartItem) {
+      if (existingCartItem.quantity + quantity > availableStock) {
         return new NextResponse(
           JSON.stringify({ message: "Not enough stock available" }),
           { status: 400 }
         );
       }
-      user.cart.push({ productId, quantity });
+      existingCartItem.quantity += quantity;
+      existingCartItem.price = price;
+    } else {
+      if (quantity > availableStock) {
+        return new NextResponse(
+          JSON.stringify({ message: "Not enough stock available" }),
+          { status: 400 }
+        );
+      }
+      user.cart.push({ productId, quantity, price });
     }
 
     await user.save();

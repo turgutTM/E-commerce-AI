@@ -83,7 +83,7 @@ const Blogs = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-       <TuguAnimation></TuguAnimation>
+        <TuguAnimation></TuguAnimation>
       </div>
     );
   }
@@ -95,15 +95,12 @@ const Blogs = () => {
   return (
     <div className="bg-gray-100 py-10 px-4 md:px-8 lg:px-16">
       <header className="text-center mb-10">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-          Welcome to Blogs
+        <h1 className="text-4xl md:text-5xl font-light text-gray-800 ">
+          BLOGS
         </h1>
-        <p className="text-lg text-gray-600">
-          Discover newest blogs about products
-        </p>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="mt-4 px-4 py-2 hover:bg-blue-500 duration-150 bg-blue-600 text-white rounded-lg"
+          className="mt-4 px-5 py-1  hover:bg-black hover:text-white duration-150 bg-white border-black border text-black rounded-lg"
         >
           Add Blog
         </button>
@@ -163,13 +160,13 @@ const Blogs = () => {
             <div className="flex justify-end">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 mr-2 bg-gray-300 rounded"
+                className="px-4 py-2 mr-2  hover:bg-black hover:text-white  bg-white border-black border text-black rounded-full duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddBlog}
-                className="px-4 py-2 bg-blue-600 text-white rounded transition-all duration-200"
+                className="px-4 py-2 hover:bg-black hover:text-white  bg-white border-black border text-black rounded-full transition-all duration-200"
               >
                 Add Blog
               </button>
@@ -225,7 +222,7 @@ const Blogs = () => {
 
         <aside className="space-y-10">
           <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            <h3 className="text-2xl font-light text-gray-800 mb-4">
               Categories
             </h3>
             <ul className="space-y-2 text-gray-600">
@@ -260,7 +257,7 @@ const Blogs = () => {
           </div>
 
           <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            <h3 className="text-2xl font-light text-gray-800 mb-4">
               Popular Posts
             </h3>
             <ul className="space-y-4">

@@ -10,7 +10,7 @@ const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
   const cartItems = useSelector((state) => state.ShopCart.cartItems);
   const router = useRouter();
   const [message, setMessage] = React.useState("");
-  const [deletingItemId, setDeletingItemId] = React.useState(null); // Silme animasyonu kontrolü
+  const [deletingItemId, setDeletingItemId] = React.useState(null); 
   const dispatch = useDispatch();
 
   const handleFinishShop = () => {
@@ -28,12 +28,10 @@ const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
       return;
     }
 
-    // Silme animasyonunu başlat
     setDeletingItemId(productId);
 
     setTimeout(async () => {
       try {
-        // Redux ile öğeyi sil
         dispatch(removeFromCart(productId));
 
         const response = await fetch("/api/delete-from-cart", {
@@ -53,9 +51,9 @@ const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
         console.error("Error deleting item:", error);
         setMessage("Failed to delete item.");
       } finally {
-        setDeletingItemId(null); // Animasyonu sıfırla
+        setDeletingItemId(null);
       }
-    }, 500); // Animasyon süresiyle uyumlu
+    }, 500);
   };
 
   return (
@@ -82,7 +80,9 @@ const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
               <li
                 key={item.id}
                 className={`flex border-b-2 border-blue-100 py-2 justify-between items-center transition-all duration-500 ${
-                  deletingItemId === item.id ? "opacity-50 blur-sm" : "opacity-100"
+                  deletingItemId === item.id
+                    ? "opacity-50 blur-sm"
+                    : "opacity-100"
                 }`}
               >
                 <img

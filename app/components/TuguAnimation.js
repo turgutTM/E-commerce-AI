@@ -27,7 +27,7 @@ const TuguAnimation = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className="flex justify-center items-center h-screen">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 500 150"

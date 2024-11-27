@@ -51,6 +51,7 @@ const ShopProducts = () => {
         userId,
         productId: product._id,
         quantity,
+        price:product.price
       });
 
       await fetchProducts();
