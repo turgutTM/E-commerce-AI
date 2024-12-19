@@ -115,7 +115,7 @@ const Blog = () => {
           alt={blog.title}
           width={800}
           height={400}
-          className="w-full h-72 object-cover rounded-lg shadow-lg"
+          className="w-full h-72 object-contain rounded-lg shadow-lg"
         />
       </div>
 
@@ -177,7 +177,7 @@ const Blog = () => {
           <button
             onClick={handleAddComment}
             disabled={isSubmitting}
-            className="px-4 py-2 bg-black text-white rounded-lg hover:bg-white hover:text-black duration-200"
+            className="px-4 py-2 bg-black text-white rounded-lg border border-black hover:bg-white hover:border hover:border-black hover:text-black duration-200 box-border"
           >
             {isSubmitting ? "Submitting..." : "Add Comment"}
           </button>

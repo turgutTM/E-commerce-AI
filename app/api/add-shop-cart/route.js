@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import connect from "@/db";
+import ShopCart from "@/models/ShopCart";
 import User from "@/models/User";
 import Product from "@/models/Product";
 
 export const POST = async (request) => {
   const { userId, productId, quantity, price } = await request.json();
-  console.log(userId,productId,quantity,price);
-  
 
   if (!userId || !productId || quantity === undefined || price === undefined) {
     return new NextResponse(
@@ -31,17 +30,16 @@ export const POST = async (request) => {
     if (!product) {
       return new NextResponse(
         JSON.stringify({ message: "Product not found" }),
-        {
-          status: 404,
-        }
+        { status: 404 }
       );
     }
 
     const availableStock = product.stock;
 
-    const existingCartItem = user.cart.find(
-      (item) => item.productId.toString() === productId.toString()
-    );
+    const existingCartItem = await ShopCart.findOne({
+      userId,
+      productId,
+    });
 
     if (existingCartItem) {
       if (existingCartItem.quantity + quantity > availableStock) {
@@ -51,7 +49,7 @@ export const POST = async (request) => {
         );
       }
       existingCartItem.quantity += quantity;
-      existingCartItem.price = price;
+      await existingCartItem.save();
     } else {
       if (quantity > availableStock) {
         return new NextResponse(
@@ -59,15 +57,21 @@ export const POST = async (request) => {
           { status: 400 }
         );
       }
-      user.cart.push({ productId, quantity, price });
+      const newCartItem = new ShopCart({
+        userId,
+        productId,
+        quantity,
+        price,
+      });
+      await newCartItem.save();
     }
 
-    await user.save();
+    const updatedCart = await ShopCart.find({ userId }).populate("productId");
 
     return new NextResponse(
       JSON.stringify({
         message: "Product added to cart successfully",
-        cart: user.cart,
+        cart: updatedCart,
       }),
       { status: 200 }
     );

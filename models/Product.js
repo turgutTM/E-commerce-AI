@@ -46,15 +46,21 @@ const ProductSchema = new mongoose.Schema(
         rating: Number,
       },
     ],
-
     stock: {
       type: Number,
       default: 10,
     },
-
     quantity: {
       type: Number,
       default: 0,
+    },
+    views: {
+      type: [String],
+      default: [],
+    },
+    boxPhoto: {
+      type: String, 
+      required: false, 
     },
   },
   {

@@ -7,14 +7,14 @@ const EditProductModal = ({ product, isOpen, onClose, onUpdate }) => {
   const [imgURL, setImgURL] = useState(product?.imgURL || "");
   const [name, setName] = useState(product?.name || "");
   const [price, setPrice] = useState(product?.price || "");
-  const [successMessage, setSuccessMessage] = useState(""); 
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     if (product) {
       setImgURL(product.imgURL || "");
       setName(product.name || "");
       setPrice(product.price || "");
-      setSuccessMessage(""); 
+      setSuccessMessage("");
     }
   }, [product]);
 
@@ -31,11 +31,11 @@ const EditProductModal = ({ product, isOpen, onClose, onUpdate }) => {
         price,
       });
       onUpdate(response.data.product);
-      setSuccessMessage("Product updated successfully!"); 
+      setSuccessMessage("Product updated successfully!");
       onClose();
     } catch (error) {
       console.error("Error updating product:", error);
-      alert("An error occurred while updating the product. Please try again."); 
+      alert("An error occurred while updating the product. Please try again.");
     }
   };
 

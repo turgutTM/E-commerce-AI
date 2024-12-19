@@ -190,7 +190,7 @@ const Blogs = () => {
                       "https://source.unsplash.com/featured/800x600"
                     }
                     alt={blog.title}
-                    className="w-full h-64 object-cover"
+                    className="w-full h-64 object-contain"
                   />
                   <div className="p-6">
                     <div className="w-full justify-between flex items-center">

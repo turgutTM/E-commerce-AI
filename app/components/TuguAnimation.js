@@ -33,9 +33,10 @@ const TuguAnimation = () => {
         viewBox="0 0 500 150"
         className="w-[400px] h-auto"
       >
+        {/* T */}
         <path
           id="pathT"
-          d="M50 100 L150 100 M100 50 L100 100"
+          d="M50 50 L150 50 M100 50 L100 100"
           stroke="black"
           strokeWidth="2"
           fill="none"
@@ -43,6 +44,7 @@ const TuguAnimation = () => {
           strokeDashoffset="100"
         />
 
+        {/* U */}
         <path
           id="pathU1"
           d="M180 50 C180 100, 220 100, 220 50"
@@ -53,9 +55,10 @@ const TuguAnimation = () => {
           strokeDashoffset="150"
         />
 
+        {/* G */}
         <path
           id="pathG"
-          d="M250 75 A40 40 0 1 1 330 75 L310 75"
+          d="M250 50 A40 40 0 1 0 330 50 L310 50"
           stroke="black"
           strokeWidth="2"
           fill="none"
@@ -63,6 +66,7 @@ const TuguAnimation = () => {
           strokeDashoffset="200"
         />
 
+        {/* U */}
         <path
           id="pathU2"
           d="M360 50 C360 100, 400 100, 400 50"

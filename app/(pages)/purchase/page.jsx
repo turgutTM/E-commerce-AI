@@ -18,8 +18,10 @@ const Purchase = () => {
     const fetchCartItems = async () => {
       if (user) {
         try {
-          const response = await axios.get(`/api/cart-products/${user._id}`);
-          setCartItems(response.data.cartProducts);
+          const response = await axios.get(
+            `/api/shop-cart-products/${user._id}`
+          );
+          setCartItems(response.data.cartDetails);
         } catch (error) {
           console.error("Error fetching cart items:", error);
         } finally {
@@ -33,7 +35,7 @@ const Purchase = () => {
   const totalPrice = cartItems.reduce(
     (total, item) =>
       total +
-      (item.discountedPrice !== 0 ? item.discountedPrice : item.price) *
+      (item.price) *
         item.quantity,
     0
   );
@@ -99,17 +101,14 @@ const Purchase = () => {
                 <img
                   src={item.imgURL}
                   alt={item.name}
-                  className="w-20 h-20 object-cover rounded-lg"
+                  className="w-20 h-20 object-contain rounded-lg"
                 />
                 <div className="flex-1 ml-4">
                   <p className="font-semibold text-lg">{item.name}</p>
                   <p className="text-gray-500">Quantity: {item.quantity}</p>
                 </div>
                 <p className="text-gray-500">
-                  $
-                  {item.discountedPrice !== 0
-                    ? item.discountedPrice
-                    : item.price}
+                 ${item.price}
                 </p>
               </li>
             ))}

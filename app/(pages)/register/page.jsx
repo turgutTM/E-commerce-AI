@@ -4,6 +4,7 @@ import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,12 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
+
+  const user = useSelector((state) => state.user.user);
+
+  if (user) {
+    router.push("/");
+  }
 
   const handleRegister = async (e) => {
     e.preventDefault();

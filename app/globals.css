@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
 
 @layer utilities {
   ::-webkit-scrollbar {
@@ -16,7 +19,7 @@
 @keyframes moveToCart {
   0% {
     opacity: 1;
-    transform: translateY(80px) scale(1); 
+    transform: translateY(80px) scale(1);
   }
   100% {
     opacity: 0;
@@ -42,4 +45,21 @@
 
 .cart-icon-grow {
   animation: cartIconGrow 0.5s ease-in-out;
+}
+
+@keyframes deleteMove {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(50%);
+  }
+  100% {
+    transform: translateX(100%) scale(0.1);
+    opacity: 0;
+  }
+}
+
+.delete-anim {
+  animation: deleteMove 1s ease-in-out forwards;
 }

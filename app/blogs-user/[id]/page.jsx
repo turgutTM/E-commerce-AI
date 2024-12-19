@@ -47,7 +47,7 @@ const UserBlogs = () => {
                   <img
                     src={blog.blogPhoto}
                     alt={blog.title}
-                    className="w-full h-48 object-cover"
+                    className="w-[50%] h-full object-cover"
                   />
                 )}
                 <div className="p-6">

@@ -13,6 +13,7 @@ export const POST = async (req) => {
       details,
       category,
       discountPercentage,
+      boxPhoto,
     } = await req.json();
     console.log(
       userID,
@@ -21,7 +22,8 @@ export const POST = async (req) => {
       price,
       details,
       category,
-      discountPercentage
+      discountPercentage,
+      boxPhoto
     );
 
     if (!userID || !name || !price || !details || !category) {
@@ -42,6 +44,7 @@ export const POST = async (req) => {
       details,
       category,
       discountPercentage: discountPercentage || 0,
+      boxPhoto: boxPhoto || null,
     });
 
     await newProduct.save();

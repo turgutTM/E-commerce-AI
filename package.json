@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@reduxjs/toolkit": "^2.2.8",
     "@uploadthing/react": "^7.0.3",
     "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
     "next": "14.2.9",

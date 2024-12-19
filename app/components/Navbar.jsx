@@ -26,19 +26,11 @@ const Navbar = () => {
   const cartIconRef = useRef(null);
 
   useEffect(() => {
-    const fetchCartProducts = async () => {
-      try {
-        const response = await axios.get(`/api/cart-products/${userId}`);
-        dispatch(setCartItems(response.data.cartProducts));
-      } catch (error) {
-        console.error("Error fetching cart products:", error);
-      }
-    };
-
-    if (userId) {
-      fetchCartProducts();
+    const storedPage = localStorage.getItem("activePage");
+    if (storedPage) {
+      setActivePage(storedPage);
     }
-  }, [userId, dispatch]);
+  }, []);
 
   useEffect(() => {
     if (prevCartLength === 0 && cartItems.length > 0) {
@@ -55,6 +47,7 @@ const Navbar = () => {
 
   const handleNavClick = (page) => {
     setActivePage(page);
+    localStorage.setItem("activePage", page);
   };
 
   const toggleDropdown = () => {
@@ -65,6 +58,7 @@ const Navbar = () => {
     try {
       await axios.post("/api/logout");
       dispatch(logoutUser());
+      localStorage.removeItem("activePage");
       window.location.href = "/login";
     } catch (error) {
       console.error("Error logging out:", error);
@@ -72,7 +66,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between items-center px-12  bg-white text-black shadow-md sticky top-0 z-50">
+    <div className="flex justify-between items-center px-16 bg-white text-black shadow-md sticky top-0 z-50">
       <div className="text-3xl font-extrabold italic tracking-wide">
         <Link href="/" onClick={() => handleNavClick("Home")}>
           <img
@@ -180,11 +174,7 @@ const Navbar = () => {
         />
       )}
 
-      <CartSidebar
-        isOpen={cartOpen}
-        onClose={() => setCartOpen(false)}
-        cartItems={cartItems}
-      />
+      <CartSidebar isOpen={cartOpen} onClose={() => setCartOpen(false)} />
       <AddProductModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );

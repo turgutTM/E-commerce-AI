@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/app/features/UserSlice";
 
 const Login = () => {
@@ -11,6 +11,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
+  const user = useSelector((state) =>state.user.user)
+
+  if(user) {
+    router.push("/")
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -51,7 +56,7 @@ const Login = () => {
         <form onSubmit={handleLogin} className="mt-10 flex flex-col gap-2">
           <p>Email</p>
           <input
-            className="bg-[#f9f5e3] rounded-lg focus:outline-none w-96 p-2"
+            className="bg-[#f9f5e3] rounded-lg focus:outline-none  w-96 p-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

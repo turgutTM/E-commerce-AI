@@ -14,6 +14,11 @@ export default withUt({
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        category: ["Urbanist", "sans-serif"],
+        pfont:["Jost", "sans-serif"]
+
+      },
       backgroundImage: {
         "custom-background": "url('/glasses.jpg')",
         orange: "url('/orange-photo.jpg')",

@@ -14,9 +14,12 @@ const AddProductModal = ({ isOpen, onClose }) => {
     details: "",
     category: "",
     discountPercentage: 0,
+    boxPhoto: "",
   });
   const [imagePreview, setImagePreview] = useState("");
+  const [boxPhotoPreview, setBoxPhotoPreview] = useState("");
   const [isImageUploaded, setIsImageUploaded] = useState(false);
+  const [isBoxPhotoUploaded, setIsBoxPhotoUploaded] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +35,14 @@ const AddProductModal = ({ isOpen, onClose }) => {
       setImagePreview(res[0].url);
       setFormData((prev) => ({ ...prev, imgURL: res[0].url }));
       setIsImageUploaded(true);
+    }
+  };
+
+  const handleBoxPhotoUpload = (res) => {
+    if (res && res.length > 0) {
+      setBoxPhotoPreview(res[0].url);
+      setFormData((prev) => ({ ...prev, boxPhoto: res[0].url }));
+      setIsBoxPhotoUploaded(true);
     }
   };
 
@@ -51,6 +62,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
           details: formData.details,
           category: formData.category,
           discountPercentage: formData.discountPercentage,
+          boxPhoto: formData.boxPhoto,
         }),
       });
 
@@ -69,9 +81,12 @@ const AddProductModal = ({ isOpen, onClose }) => {
         details: "",
         category: "",
         discountPercentage: 0,
+        boxPhoto: "",
       });
       setImagePreview("");
+      setBoxPhotoPreview("");
       setIsImageUploaded(false);
+      setIsBoxPhotoUploaded(false);
     } catch (error) {
       console.error("Error creating product:", error);
     }
@@ -86,7 +101,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
           <img
             src={imagePreview || "/profilePhoto.jpg"}
             alt="Product Preview"
-            className="w-full h-auto mb-4 border rounded"
+            className="w-80 h-32 object-cover mb-4 border rounded"
           />
           <UploadButton
             endpoint="imageUploader"
@@ -96,11 +111,32 @@ const AddProductModal = ({ isOpen, onClose }) => {
             }}
           />
           {isImageUploaded && (
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm object-cover text-gray-500">
               Image uploaded successfully!
             </p>
           )}
           <p className="mt-2 text-sm text-gray-500">Upload Image</p>
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold mb-2">Box Photo</h3>
+            <img
+              src={boxPhotoPreview || "/profilePhoto.jpg"}
+              alt="Box Preview"
+              className="w-80 h-32 mb-4 object-cover border rounded"
+            />
+            <UploadButton
+              endpoint="imageUploader"
+              onClientUploadComplete={handleBoxPhotoUpload}
+              onUploadError={(error) => {
+                alert(`ERROR! ${error.message}`);
+              }}
+            />
+            {isBoxPhotoUploaded && (
+              <p className="mt-2 text-sm text-gray-500">
+                Box photo uploaded successfully!
+              </p>
+            )}
+            <p className="mt-2 text-sm text-center text-gray-500">Upload Box Photo</p>
+          </div>
         </div>
         <div className="flex flex-col w-1/2 pl-4">
           <h2 className="text-xl font-bold mb-4">Add Product</h2>

@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import { setProduct } from "../features/ProductSlice";
 import { addToCart } from "@/app/features/ShopCart";
 import TuguAnimation from "./TuguAnimation";
+import { FaApple } from "react-icons/fa";
+import { SiSamsung } from "react-icons/si";
 
 const ShopProducts = () => {
   const [products, setProducts] = useState([]);
@@ -47,11 +49,11 @@ const ShopProducts = () => {
     try {
       dispatch(addToCart(product));
       const userId = user._id;
-      const response = await axios.post("/api/add-to-cart", {
+      const response = await axios.post("/api/add-shop-cart", {
         userId,
         productId: product._id,
         quantity,
-        price:product.price
+        price: product.price,
       });
 
       await fetchProducts();
@@ -96,7 +98,9 @@ const ShopProducts = () => {
   };
 
   const openEditModal = (product) => {
+    console.log("Opening modal for product:", product);
     setSelectedProduct(product);
+
     setIsEditModalOpen(true);
   };
 
@@ -111,6 +115,21 @@ const ShopProducts = () => {
         product._id === updatedProduct._id ? updatedProduct : product
       )
     );
+  };
+  const getCategoryIcon = (productName) => {
+    if (
+      productName.startsWith("iPhone") ||
+      productName.startsWith("MacBook") ||
+      productName.startsWith("AirPods") ||
+      productName.startsWith("Apple Watch")
+    ) {
+      return <FaApple className="text-black text-[16px]" />;
+    } else if (productName.startsWith("Samsung")) {
+      return (
+        <SiSamsung className="text-black text-6xl mt-[-19px] absolute transform scale-x-205" />
+      );
+    }
+    return null;
   };
 
   if (loading) {
@@ -152,8 +171,8 @@ const ShopProducts = () => {
           {currentProducts.map((product) => (
             <div className="relative" key={product._id}>
               <Link href={`/product/${product._id}`} passHref>
-                <div className="flex flex-col rounded-xl gap-4 p-3 w-[18rem] h-[26rem] border-2 border-gray-300 transition-transform duration-300">
-                  <div className="bg-gray-100 rounded-xl w-full h-full relative">
+                <div className="flex flex-col rounded-xl gap-4 p-3 w-[18rem] h-[26rem] border-2 bg-white border-gray-300 transition-transform duration-300">
+                  <div className="bg-white rounded-xl w-full h-full relative">
                     {product.stock === 0 && (
                       <div className="absolute top-0 left-0 right-0 bottom-0  flex justify-center items-center rounded-xl z-10">
                         <span className="text-white font-bold text-xl">
@@ -166,23 +185,25 @@ const ShopProducts = () => {
                         product.stock === 0 ? "blur-sm" : ""
                       }`}
                     >
-                      <p className="rounded-full border border-black text-sm pl-5 pr-5 w-fit">
-                        {product.category}
+                      <p className="rounded-full font-pfont border-black text-xs text-blue-800  pr-5 w-fit">
+                        {getCategoryIcon(product.name)}
                       </p>
                       {product.discountPercentage > 0 && (
                         <FaPercentage className="text-yellow-500" />
                       )}
                     </div>
-                    <img
-                      className={`h-[15rem] w-full flex justify-center object-cover ${
-                        product.stock === 0 ? "opacity-50" : ""
-                      }`}
-                      src={product.imgURL || "/iphone16.webp"}
-                      alt={product.name}
-                    />
+                    <div className="h-[15rem]">
+                      <img
+                        className={`h-full w-full flex justify-center object-contain ${
+                          product.stock === 0 ? "opacity-50" : ""
+                        }`}
+                        src={product.imgURL || "/iphone16.webp"}
+                        alt={product.name}
+                      />
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <p className="font-bold opacity-80">{product.name}</p>
+                  <div className="flex flex-col h-[12rem] justify-center w-full items-start gap-1">
+                    <p className="opacity-80 font-pfont">{product.name}</p>
                     <div className="text-yellow-500 flex">
                       {Array.from({ length: 5 }).map((_, index) => (
                         <FaStar
@@ -291,6 +312,7 @@ const ShopProducts = () => {
       {isEditModalOpen && (
         <EditProductModal
           product={selectedProduct}
+          isOpen={isEditModalOpen}
           onClose={closeEditModal}
           onUpdate={handleUpdateProduct}
         />

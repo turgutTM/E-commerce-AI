@@ -27,6 +27,7 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: 10000,
     },
+    viewedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     cart: [
       {
         productId: {

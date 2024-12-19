@@ -4,14 +4,43 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { MdDeleteOutline } from "react-icons/md";
 import { removeFromCart } from "../features/ShopCart";
+import TuguAnimation from "./TuguAnimation";
 
-const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
+const CartSidebar = ({ isOpen, onClose }) => {
   const user = useSelector((state) => state.user.user);
-  const cartItems = useSelector((state) => state.ShopCart.cartItems);
-  const router = useRouter();
+  const [cartItems, setCartItems] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState("");
-  const [deletingItemId, setDeletingItemId] = React.useState(null); 
+  const [animatingItemId, setAnimatingItemId] = React.useState(null);
+  const router = useRouter();
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    const fetchCartItems = async () => {
+      if (!user) return;
+
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/shop-cart-products/${user._id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch cart items.");
+        }
+        const data = await response.json();
+        setCartItems(data.cartDetails || []);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+        setMessage("Failed to load cart items.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchCartItems();
+    } else {
+      setCartItems([]);
+    }
+  }, [user, isOpen]);
 
   const handleFinishShop = () => {
     onClose();
@@ -28,32 +57,32 @@ const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
       return;
     }
 
-    setDeletingItemId(productId);
+    setAnimatingItemId(productId);
 
+    const animationDuration = 500;
     setTimeout(async () => {
       try {
         dispatch(removeFromCart(productId));
-
-        const response = await fetch("/api/delete-from-cart", {
+        const response = await fetch("/api/delete-shop-cart", {
           method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: user._id, productId }),
         });
 
-        // API yanıtı kontrolü
         if (!response.ok) {
-          const data = await response.json();
-          setMessage(data.message || "Failed to delete item.");
+          throw new Error("Failed to delete item.");
         }
+
+        setCartItems((prev) =>
+          prev.filter((item) => item.productId !== productId)
+        );
       } catch (error) {
         console.error("Error deleting item:", error);
         setMessage("Failed to delete item.");
       } finally {
-        setDeletingItemId(null);
+        setAnimatingItemId(null);
       }
-    }, 500);
+    }, animationDuration);
   };
 
   return (
@@ -74,15 +103,15 @@ const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
       </div>
 
       <div className="p-6 overflow-y-auto h-[80vh]">
-        {cartItems.length > 0 ? (
+        {loading ? (
+          <TuguAnimation />
+        ) : cartItems.length > 0 ? (
           <ul className="space-y-4">
             {cartItems.map((item) => (
               <li
-                key={item.id}
+                key={item.productId}
                 className={`flex border-b-2 border-blue-100 py-2 justify-between items-center transition-all duration-500 ${
-                  deletingItemId === item.id
-                    ? "opacity-50 blur-sm"
-                    : "opacity-100"
+                  animatingItemId === item.productId ? "delete-anim" : ""
                 }`}
               >
                 <img
@@ -92,17 +121,12 @@ const CartSidebar = ({ isOpen, onClose, setFetchedCartItems }) => {
                 />
                 <div className="flex flex-col w-full ml-4">
                   <p className="font-semibold">{item.name}</p>
-                  <p className="text-gray-500">
-                    $
-                    {item.discountedPrice !== 0
-                      ? item.discountedPrice
-                      : item.price}
-                  </p>
+                  <p className="text-gray-500">${item.price}</p>
                 </div>
                 <p className="font-semibold">{item.quantity}</p>
                 <button
                   className="text-red-500 hover:text-red-700 ml-4"
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => handleDelete(item.productId)}
                 >
                   <MdDeleteOutline size={24} />
                 </button>

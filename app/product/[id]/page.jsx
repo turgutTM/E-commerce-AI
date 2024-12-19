@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/app/features/ShopCart";
 import TuguAnimation from "../../components/TuguAnimation";
+import Link from "next/link";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -22,9 +23,45 @@ const ProductPage = () => {
   const user = useSelector((state) => state.user.user);
   const userId = user ? user._id : null;
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    const recordProductView = async () => {
+      if (!userId) {
+        console.warn("User not logged in, cannot record product view.");
+        return;
+      }
+
+      try {
+        await axios.post(`/api/add-product-view/${id}`, {
+          userId,
+        });
+        console.log("Product view recorded successfully.");
+      } catch (error) {
+        console.error("Error recording product view:", error);
+      }
+    };
+
+    recordProductView();
+  }, [id, userId]);
+
+  useEffect(() => {
+    const recordUserView = async () => {
+      if (!userId) {
+        console.warn("User not logged in, cannot record product view.");
+        return;
+      }
+
+      try {
+        await axios.post(`/api/add-user-view/${userId}`, {
+          productId: id,
+        });
+        console.log("Product view recorded successfully.");
+      } catch (error) {
+        console.error("Error recording product view:", error);
+      }
+    };
+
+    recordUserView();
+  }, []);
 
   const handleAddToCart = async (productId) => {
     if (!userId) {
@@ -36,7 +73,7 @@ const ProductPage = () => {
     try {
       dispatch(addToCart(product));
 
-      const response = await axios.post("/api/add-to-cart", {
+      const response = await axios.post("/api/add-shop-cart", {
         userId,
         productId,
         quantity: 1,
@@ -142,7 +179,7 @@ const ProductPage = () => {
         <div className="w-[65%] sticky top-20 p-4 h-fit max-w-full">
           <div className="w-full h-[27rem] mb-4 relative">
             <img
-              className="w-full h-[27rem] object-cover rounded-lg"
+              className="w-full h-[27rem] object-contain rounded-lg"
               src={product.imgURL || "/blouse.png"}
               alt="Product Image Large"
             />
@@ -280,29 +317,81 @@ const ProductPage = () => {
           {product.details}
         </p>
       </div>
-      <div className="w-[75%] py-10">
-        <h2 className="text-xl font-semibold text-center mb-6">
-          Related Products
-        </h2>
-        <div className="flex overflow-x-auto gap-8 pb-4">
-          {relatedProducts.map((relatedProduct) => (
-            <div
-              key={relatedProduct.id}
-              className="flex-none w-[250px] p-4 border border-gray-200 rounded-lg"
-            >
+      <div className="flex flex-col mt-20 h-[30rem] justify-center w-full">
+        <div>
+          <p className="font-semibold z-50 text-4xl flex justify-center">
+            What's in the box
+          </p>
+        </div>
+        <div className="flex justify-center items-center  h-[30rem] gap-28">
+          <div className="flex gap-3 w-[18%] h-[60%] flex-col items-center justify-center ">
+            <img
+              className=" h-full object-cover rounded-lg"
+              src={product.boxPhoto}
+              alt="Product"
+            />
+            <p>{product.name}</p>
+          </div>
+          {product.name.startsWith("iPhone") && (
+            <div className="flex flex-col items-center text-center mt-2">
               <img
-                src={relatedProduct.imgURL || "/blouse.png"}
-                alt="Related Product"
-                className="w-full h-48 object-cover rounded-lg mb-4"
+                className="h-[17rem] object-cover"
+                src="/iphonecable.jpeg"
+                alt="USB-C Charge Cable"
               />
-              <p className="text-sm font-semibold text-center ">
-                {relatedProduct.name}
-              </p>
-              <p className="text-gray-500 text-sm">
-                {relatedProduct.description}
-              </p>
+              <p className="mt-2 ">USB-C Charge Cable</p>
             </div>
-          ))}
+          )}
+          {product.name.startsWith("Samsung") && (
+            <div className="flex flex-col w-[14%] items-center text-center mt-2">
+              <img
+                className="w-full h-full object-cover"
+                src="/samsungcable2.webp"
+                alt="USB-C Charge Cable"
+              />
+              <p>USB-C Charge Cable</p>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="w-[75%] py-10 mt-36">
+        <h2 className="text-4xl font-bold text-center mb-6">
+          Find the best device for yourself
+        </h2>
+        <div className="flex overflow-x-auto mt-16 gap-8 pb-4">
+          {relatedProducts
+            .filter((relatedProduct) => relatedProduct._id !== id)
+            .map((relatedProduct) => (
+              <div key={relatedProduct.id} className="flex-none w-[70%] p-4">
+                <Link href={`/product/${relatedProduct._id}`}>
+                  <img
+                    src={relatedProduct.imgURL || "/blouse.png"}
+                    alt="Related Product"
+                    className="w-full mt-4 h-96 object-contain rounded-lg mb-4"
+                  />
+                </Link>
+                <p className="text-lg font-semibold text-center">
+                  {relatedProduct.name}
+                </p>
+
+                <div className="text-center mb-4 mt-4">
+                  <div className="flex justify-center gap-4">
+                    <p className="text-[13px] border items-center justify-center px-2 border-black p-1 rounded-full font-medium">
+                      128GB
+                    </p>
+                    <p className="text-[13px] border p-1 px-2 border-black rounded-full font-medium">
+                      256GB
+                    </p>
+                    <p className="text-[13px] border p-1 px-2 border-black rounded-full font-medium">
+                      512GB
+                    </p>
+                  </div>
+                  <p className="text-gray-500 mt-5 text-sm font-semibold">
+                    From ${relatedProduct.price}
+                  </p>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
     </div>
