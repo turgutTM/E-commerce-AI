@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/app/features/ShopCart";
 import TuguAnimation from "../../components/TuguAnimation";
 import Link from "next/link";
+import { setCurrentProduct } from "../../features/ProductSlice";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -19,7 +20,9 @@ const ProductPage = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [scrolled, setScrolled] = useState(false);
   const dispatch = useDispatch();
-
+  const reduxCurrentProductId = useSelector(
+    (state) => state.product.currentProduct
+  );
   const user = useSelector((state) => state.user.user);
   const userId = user ? user._id : null;
 
@@ -35,6 +38,7 @@ const ProductPage = () => {
           userId,
         });
         console.log("Product view recorded successfully.");
+        ;
       } catch (error) {
         console.error("Error recording product view:", error);
       }
@@ -104,6 +108,8 @@ const ProductPage = () => {
       try {
         const response = await axios.get(`/api/single-product/${id}`);
         setProduct(response.data);
+        dispatch(setCurrentProduct(id));
+        localStorage.setItem("lastViewedProductId", reduxCurrentProductId);
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {

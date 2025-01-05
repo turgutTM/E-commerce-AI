@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,23 +9,68 @@ import { setUser } from "@/app/features/UserSlice";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [focusedInput, setFocusedInput] = useState(null);
+  const [isBlurring, setIsBlurring] = useState(false);
+  const blurTimeout = useRef(null);
+  const pendingFocus = useRef(null);
+
   const dispatch = useDispatch();
   const router = useRouter();
-  const user = useSelector((state) =>state.user.user)
+  const user = useSelector((state) => state.user.user);
 
-  if(user) {
-    router.push("/")
+  function getHighlightStyle(focusedInput, isBlurring) {
+    let styles = {
+      top: "26px",
+      left: "0px",
+      width: "100%",
+      height: "45px",
+      transformOrigin: "left",
+      transition: "transform 0.5s ease-in-out, top 0.5s ",
+    };
+
+    if (focusedInput === "email") {
+      styles.top = "25px";
+      styles.transform = isBlurring ? "scaleX(0)" : "scaleX(1)";
+    } else if (focusedInput === "password") {
+      styles.top = "109px";
+      styles.transform = isBlurring ? "scaleX(0)" : "scaleX(1)";
+    } else {
+      styles.transform = "scaleX(0)";
+    }
+
+    return styles;
   }
+
+  const handleBlur = () => {
+    if (blurTimeout.current) {
+      clearTimeout(blurTimeout.current);
+    }
+    setIsBlurring(true);
+    blurTimeout.current = setTimeout(() => {
+      setIsBlurring(false);
+      setFocusedInput(null);
+      if (pendingFocus.current) {
+        setFocusedInput(pendingFocus.current);
+        pendingFocus.current = null;
+      }
+    }, 500);
+  };
+
+  const handleFocus = (inputName) => {
+    if (isBlurring) {
+      pendingFocus.current = inputName;
+    } else {
+      setFocusedInput(inputName);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       const res = await fetch("/api/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -33,13 +78,14 @@ const Login = () => {
         const data = await res.json();
         dispatch(setUser(data));
         localStorage.setItem("token", data.token);
-
         router.push("/");
       } else {
         const data = await res.json();
+
+        console.log(data);
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("Bir hata oluştu:", error);
     }
   };
 
@@ -53,16 +99,35 @@ const Login = () => {
           <p className="text-gray-500">Welcome Back</p>
           <p className="text-5xl font-bold mt-3">Sign In</p>
         </div>
+
         <form onSubmit={handleLogin} className="mt-10 flex flex-col gap-2">
-          <p>Email</p>
-          <input
-            className="bg-[#f9f5e3] rounded-lg focus:outline-none  w-96 p-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <div className="flex flex-col gap-2 mt-4 w-96">
-            <div className="flex justify-between">
+          <div className="relative w-96">
+            <div
+              className={`
+                absolute 
+                border-2 
+                border-orange-400 
+                rounded-lg 
+                pointer-events-none 
+                transition-transform 
+                transition-top 
+                duration-100 
+                ease-in-out
+              `}
+              style={getHighlightStyle(focusedInput, isBlurring)}
+            />
+
+            <p className="mb-1">Email</p>
+            <input
+              className="bg-[#f9f5e3] rounded-lg focus:outline-none w-full p-2"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={() => handleFocus("email")}
+              onBlur={() => handleBlur()}
+              required
+            />
+
+            <div className="flex justify-between mt-4 mb-1">
               <p>Password</p>
               <button className="text-gray-400 text-sm">
                 Forgot password?
@@ -72,10 +137,13 @@ const Login = () => {
               className="bg-[#f9f5e3] rounded-lg focus:outline-none w-full p-2"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => handleFocus("password")}
+              onBlur={() => handleBlur()}
               required
               type="password"
             />
           </div>
+
           <div className="w-96 flex mt-10 justify-center">
             <button
               type="submit"
@@ -85,6 +153,7 @@ const Login = () => {
             </button>
           </div>
         </form>
+
         <div className="flex gap-1 justify-center w-96 mt-6">
           <p className="text-medium text-gray-400">
             If you don't have an account?
@@ -95,7 +164,7 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="relative w-[35%] justify-center flex flex-col h-screen bg-[#FFF7D1]">
+      <div className="relative w-[35%] flex flex-col justify-center h-screen bg-[#FFF7D1]">
         <img
           src="/shopphoto.png"
           className="absolute -left-32 object-cover"

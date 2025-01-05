@@ -20,6 +20,7 @@ export default function Home() {
   const loggedinUser = useSelector((state) => state.user.user._id);
   const router = useRouter();
 
+
   useEffect(() => {
     if (!loggedinUser) {
       router.push("/login");

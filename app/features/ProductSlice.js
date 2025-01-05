@@ -1,8 +1,8 @@
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   products: [],
+  currentProduct: null,
 };
 
 const productSlice = createSlice({
@@ -27,11 +27,25 @@ const productSlice = createSlice({
       state.products = state.products.filter((prod) => prod.id !== productId);
     },
     clearProducts: (state) => {
-      state.products = [];
+      state.products = []; // Tüm ürünleri temizle
+    },
+    setCurrentProduct: (state, action) => {
+      state.currentProduct = action.payload;
+    },
+    clearCurrentProduct: (state) => {
+      state.currentProduct = null; // Şu anda görüntülenen ürünü temizle
     },
   },
 });
 
-export const { setProduct, addProduct, updateProduct, deleteProduct, clearProducts } = productSlice.actions;
+export const {
+  setProduct,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+  clearProducts,
+  setCurrentProduct,
+  clearCurrentProduct,
+} = productSlice.actions;
 
 export default productSlice.reducer;

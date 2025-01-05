@@ -102,7 +102,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
         </button>
       </div>
 
-      <div className="p-6 overflow-y-auto h-[80vh]">
+      <div className="p-6 overflow-y-auto max-h-[80vh]">
         {loading ? (
           <TuguAnimation />
         ) : cartItems.length > 0 ? (

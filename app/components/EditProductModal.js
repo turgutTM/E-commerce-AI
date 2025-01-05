@@ -59,7 +59,7 @@ const EditProductModal = ({ product, isOpen, onClose, onUpdate }) => {
         <img
           src={imgURL || "/default-image.jpg"}
           alt="Product"
-          className="w-full h-48 object-cover mb-4"
+          className="w-full h-48 object-contain mb-4"
         />
         <UploadButton
           endpoint="imageUploader"

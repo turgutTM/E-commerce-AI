@@ -5,12 +5,15 @@ import { useSelector } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import { UploadButton } from "../../utils/uploadthing";
 import TuguAnimation from "@/app/components/TuguAnimation";
+import { FaRegHeart } from "react-icons/fa";
+import { IoHeart } from "react-icons/io5";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [blogPhoto, setBlogPhoto] = useState("");
   const [error, setError] = useState(null);
+  const [likedBlogs, setLikedBlogs] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const user = useSelector((state) => state.user.user);
@@ -21,6 +24,48 @@ const Blogs = () => {
     blogPhoto: "",
     category: "",
   });
+
+  const handleLike = (blogId) => {
+    const previousBlogs = [...blogs];
+
+    setBlogs((prevBlogs) =>
+      prevBlogs.map((blog) => {
+        if (blog._id === blogId) {
+          if (blog.likes.includes(user._id)) {
+            return {
+              ...blog,
+              likes: blog.likes.filter((userId) => userId !== user._id),
+            };
+          } else {
+            return {
+              ...blog,
+              likes: [...blog.likes, user._id],
+            };
+          }
+        }
+        return blog;
+      })
+    );
+
+    fetch("/api/like-post", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ blogId, userId: user._id }),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          setBlogs(previousBlogs);
+          const errorData = await res.json();
+          console.error("Beğeni isteği başarısız:", errorData.message);
+        }
+      })
+      .catch((error) => {
+        setBlogs(previousBlogs);
+        console.error("Beğeni isteğinde hata oluştu:", error);
+      });
+  };
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -205,12 +250,28 @@ const Blogs = () => {
                     <p className="text-gray-600 mt-2">
                       {blog.content.substring(0, 100)}...
                     </p>
-
-                    <Link href={`/blog/${blog._id}`}>
-                      <button className="text-blue-600 hover:underline mt-4">
-                        Read More
-                      </button>
-                    </Link>
+                    <div className="flex items-center justify-between w-full">
+                      <Link href={`/blog/${blog._id}`}>
+                        <button className="text-blue-600 hover:underline mt-4">
+                          Read More
+                        </button>
+                      </Link>
+                      <div className="flex flex-col items-center">
+                        <i
+                          onClick={() => handleLike(blog._id)}
+                          className={`cursor-pointer transition-transform duration-200 ${
+                            blog.likes.includes(user._id) ? "scale-110" : ""
+                          }`}
+                        >
+                          {blog.likes.includes(user._id) ? (
+                            <IoHeart className="text-red-500 text-xl" />
+                          ) : (
+                            <FaRegHeart className="text-gray-500 text-xl" />
+                          )}
+                        </i>
+                        <p className="text-gray-400">{blog.likes.length}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}

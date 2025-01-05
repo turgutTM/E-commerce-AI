@@ -167,7 +167,7 @@ const Navbar = () => {
             backgroundImage: `url(${newProduct.imgURL})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            right: cartIconRef.current?.offsetLeft + -448 + "px",
+            right: cartIconRef.current?.offsetLeft + -434 + "px",
             top: cartIconRef.current?.offsetTop + 100 + "px",
           }}
           onAnimationEnd={() => setNewProduct(null)}

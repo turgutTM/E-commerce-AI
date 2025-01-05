@@ -12,7 +12,7 @@ const LoginRegisterComponent = () => {
         <p className="text-3xl text-white font-bold leading-tight">
           {user ? (
             user.role === "admin" ? (
-              "Welcome Admin"
+              <p className="text-center">Welcome Admin</p>
             ) : user.role === "user" ? (
               "Thank you for being a member"
             ) : (

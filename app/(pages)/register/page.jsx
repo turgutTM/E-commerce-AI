@@ -14,11 +14,6 @@ const Register = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
 
-  const user = useSelector((state) => state.user.user);
-
-  if (user) {
-    router.push("/");
-  }
 
   const handleRegister = async (e) => {
     e.preventDefault();

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connect from "../../../db";
 import Product from "@/models/Product";
+import { generateEmbedding } from "../../utils/embedding";
 
 export const POST = async (req) => {
   try {
@@ -15,6 +16,7 @@ export const POST = async (req) => {
       discountPercentage,
       boxPhoto,
     } = await req.json();
+
     console.log(
       userID,
       imgURL,
@@ -35,6 +37,11 @@ export const POST = async (req) => {
         ? price - (price * discountPercentage) / 100
         : null;
 
+    
+    const productText = `${name} ${details} ${category}`;
+ 
+    const embedding = await generateEmbedding(productText);
+
     const newProduct = new Product({
       userID,
       imgURL,
@@ -45,6 +52,7 @@ export const POST = async (req) => {
       category,
       discountPercentage: discountPercentage || 0,
       boxPhoto: boxPhoto || null,
+      embedding,
     });
 
     await newProduct.save();

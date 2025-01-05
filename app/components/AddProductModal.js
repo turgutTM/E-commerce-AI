@@ -101,7 +101,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
           <img
             src={imagePreview || "/profilePhoto.jpg"}
             alt="Product Preview"
-            className="w-80 h-32 object-cover mb-4 border rounded"
+            className="w-80 h-32 object-contain  mb-4 border rounded"
           />
           <UploadButton
             endpoint="imageUploader"
@@ -121,7 +121,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
             <img
               src={boxPhotoPreview || "/profilePhoto.jpg"}
               alt="Box Preview"
-              className="w-80 h-32 mb-4 object-cover border rounded"
+              className="w-80 h-32 mb-4 object-contain border rounded"
             />
             <UploadButton
               endpoint="imageUploader"

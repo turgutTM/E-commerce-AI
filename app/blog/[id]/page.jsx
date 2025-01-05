@@ -7,6 +7,8 @@ import { IoArrowBackSharp } from "react-icons/io5";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import TuguAnimation from "@/app/components/TuguAnimation";
+import { FaRegHeart } from "react-icons/fa";
+import { IoHeart } from "react-icons/io5";
 
 const Blog = () => {
   const { id } = useParams();
@@ -38,6 +40,35 @@ const Blog = () => {
 
     fetchBlog();
   }, [id]);
+  const handleLike = async (blogId) => {
+    // Sadece local state'te toggle yapıyoruz
+    if (blog.likes.includes(user._id)) {
+      setBlog((prevBlog) => ({
+        ...prevBlog,
+        likes: prevBlog.likes.filter((userId) => userId !== user._id),
+      }));
+    } else {
+      setBlog((prevBlog) => ({
+        ...prevBlog,
+        likes: [...prevBlog.likes, user._id],
+      }));
+    }
+  
+    // API isteği gönderiyoruz ama sonucu UI'a yansıtmıyoruz
+    try {
+      await axios.post("/api/like-post", {
+        blogId,
+        userId: user._id,
+      });
+      // Burada gelen cevabı tekrar setBlog ile güncellemek yerine
+      // hiçbir şey yapmıyoruz, böylece “anlık değişim” korunmuş oluyor.
+    } catch (error) {
+      console.error("Error liking/unliking blog:", error);
+      // Eğer isterseniz hatada eski haline döndürmeyi de kaldırabilirsiniz.
+    }
+  };
+  
+  
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
@@ -90,12 +121,28 @@ const Blog = () => {
 
   return (
     <div className="w-[50rem] mx-auto px-4 py-8">
-      <div
-        className="flex items-center mb-4 cursor-pointer"
-        onClick={() => router.push("/blogs")}
-      >
-        <IoArrowBackSharp className="text-2xl text-gray-600 mr-2" />
-        <span className="text-lg text-gray-600">Back to Blogs</span>
+      <div className="flex justify-between items-center">
+        <div
+          className="flex items-center mb-4 cursor-pointer"
+          onClick={() => router.push("/blogs")}
+        >
+          <IoArrowBackSharp className="text-2xl text-gray-600 mr-2" />
+          <span className="text-lg text-gray-600">Back to Blogs</span>
+        </div>
+        <div className="">
+          <i
+            onClick={() => handleLike(blog._id)}
+            className={`cursor-pointer transition-transform duration-200 ${
+              blog.likes.includes(user._id) ? "scale-110" : ""
+            }`}
+          >
+            {blog.likes.includes(user._id) ? (
+              <IoHeart className="text-red-500 text-xl" />
+            ) : (
+              <FaRegHeart className="text-gray-500 text-xl" />
+            )}
+          </i>
+        </div>
       </div>
 
       <h1 className="text-4xl font-bold text-gray-800 mb-2">{blog.title}</h1>
