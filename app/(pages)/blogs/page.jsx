@@ -27,7 +27,6 @@ const Blogs = () => {
 
   const handleLike = (blogId) => {
     const previousBlogs = [...blogs];
-
     setBlogs((prevBlogs) =>
       prevBlogs.map((blog) => {
         if (blog._id === blogId) {
@@ -46,7 +45,6 @@ const Blogs = () => {
         return blog;
       })
     );
-
     fetch("/api/like-post", {
       method: "POST",
       headers: {
@@ -82,7 +80,6 @@ const Blogs = () => {
         setLoading(false);
       }
     };
-
     fetchBlogs();
   }, []);
 
@@ -125,10 +122,15 @@ const Blogs = () => {
     ? blogs.filter((blog) => blog.category === selectedCategory)
     : blogs;
 
+
+  const popularBlogs = [...blogs]
+    .sort((a, b) => b.likes.length - a.likes.length)
+    .slice(0, 5);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <TuguAnimation></TuguAnimation>
+        <TuguAnimation />
       </div>
     );
   }
@@ -138,14 +140,14 @@ const Blogs = () => {
   }
 
   return (
-    <div className="bg-gray-100 py-10 px-4 md:px-8 lg:px-16">
+    <div className="bg-gray-100 min-h-screen py-10 px-4 md:px-8 lg:px-16">
       <header className="text-center mb-10">
-        <h1 className="text-4xl md:text-5xl font-light text-gray-800 ">
+        <h1 className="text-4xl md:text-5xl font-light text-gray-800">
           BLOGS
         </h1>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="mt-4 px-5 py-1  hover:bg-black hover:text-white duration-150 bg-white border-black border text-black rounded-lg"
+          className="mt-4 px-5 py-1 hover:bg-black hover:text-white duration-150 bg-white border-black border text-black rounded-lg"
         >
           Add Blog
         </button>
@@ -155,13 +157,11 @@ const Blogs = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
             <h2 className="text-2xl font-bold mb-4">Add a New Blog</h2>
-
-            <label className=" mb-2 flex justify-center">Add Photo:</label>
+            <label className="mb-2 flex justify-center">Add Photo:</label>
             <UploadButton
               endpoint="imageUploader"
               onClientUploadComplete={handleImageUpload}
             />
-
             <label className="block mt-4 mb-2">Title:</label>
             <input
               type="text"
@@ -172,7 +172,6 @@ const Blogs = () => {
               className="w-full mb-4 p-2 border rounded"
               placeholder="Enter blog title"
             />
-
             <label className="block mb-2">Content:</label>
             <textarea
               value={newBlog.content}
@@ -182,7 +181,6 @@ const Blogs = () => {
               className="w-full mb-4 p-2 border rounded"
               placeholder="Enter blog content"
             />
-
             <label className="block mb-2">Category:</label>
             <select
               value={newBlog.category}
@@ -201,17 +199,16 @@ const Blogs = () => {
               <option value="Sports">Sports</option>
               <option value="Toys">Toys</option>
             </select>
-
             <div className="flex justify-end">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 mr-2  hover:bg-black hover:text-white  bg-white border-black border text-black rounded-full duration-200"
+                className="px-4 py-2 mr-2 hover:bg-black hover:text-white bg-white border-black border text-black rounded-full duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddBlog}
-                className="px-4 py-2 hover:bg-black hover:text-white  bg-white border-black border text-black rounded-full transition-all duration-200"
+                className="px-4 py-2 hover:bg-black hover:text-white bg-white border-black border text-black rounded-full transition-all duration-200"
               >
                 Add Blog
               </button>
@@ -246,7 +243,6 @@ const Blogs = () => {
                         {blog.category}
                       </p>
                     </div>
-
                     <p className="text-gray-600 mt-2">
                       {blog.content.substring(0, 100)}...
                     </p>
@@ -287,25 +283,21 @@ const Blogs = () => {
               Categories
             </h3>
             <ul className="space-y-2 text-gray-600">
-              {[
-                "Electronics",
-                "Fashion",
-                "Home & Garden",
-                "Sports",
-                "Toys",
-              ].map((category) => (
-                <li
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`cursor-pointer border border-black hover:bg-gray-300 px-1 py-2 rounded-md duration-150 hover:text-white ${
-                    selectedCategory === category
-                      ? "text-white font-semibold bg-gray-500"
-                      : ""
-                  }`}
-                >
-                  {category}
-                </li>
-              ))}
+              {["Electronics", "Fashion", "Home & Garden", "Sports", "Toys"].map(
+                (category) => (
+                  <li
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`cursor-pointer border border-black hover:bg-gray-300 px-1 py-2 rounded-md duration-150 hover:text-white ${
+                      selectedCategory === category
+                        ? "text-white font-semibold bg-gray-500"
+                        : ""
+                    }`}
+                  >
+                    {category}
+                  </li>
+                )
+              )}
             </ul>
             {selectedCategory && (
               <button
@@ -316,26 +308,31 @@ const Blogs = () => {
               </button>
             )}
           </div>
-
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h3 className="text-2xl font-light text-gray-800 mb-4">
               Popular Posts
             </h3>
             <ul className="space-y-4">
-              {[1, 2, 3].map((item) => (
-                <li key={item} className="flex items-start">
+              {popularBlogs.map((blog) => (
+                <li key={blog._id} className="flex items-start">
                   <img
-                    src={`https://source.unsplash.com/random/100x100?sig=${item}`}
-                    alt={`Popular post ${item}`}
-                    className="w-16 h-16 object-cover rounded-lg mr-4"
+                    src={
+                      blog.blogPhoto ||
+                      "https://source.unsplash.com/random/100x100?blog"
+                    }
+                    alt={blog.title}
+                    className="w-16 h-16 object-contain rounded-lg mr-4"
                   />
                   <div>
-                    <h4 className="text-gray-800 font-semibold">
-                      Blog Post Title {item}
-                    </h4>
+                    <Link href={`/blog/${blog._id}`}>
+                      <h4 className="text-gray-800 font-semibold cursor-pointer hover:underline">
+                        {blog.title}
+                      </h4>
+                    </Link>
                     <p className="text-gray-600 text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      {blog.content.substring(0, 50)}...
                     </p>
+                    <p className="text-xs mt-1 text-gray-400">{blog.likes.length} likes</p>
                   </div>
                 </li>
               ))}

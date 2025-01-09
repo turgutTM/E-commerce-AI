@@ -10,7 +10,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
   const user = useSelector((state) => state.user.user);
   const [cartItems, setCartItems] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [message, setMessage] = React.useState("");
+
   const [animatingItemId, setAnimatingItemId] = React.useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -29,7 +29,6 @@ const CartSidebar = ({ isOpen, onClose }) => {
         setCartItems(data.cartDetails || []);
       } catch (error) {
         console.error("Error fetching cart items:", error);
-        setMessage("Failed to load cart items.");
       } finally {
         setLoading(false);
       }
@@ -45,7 +44,6 @@ const CartSidebar = ({ isOpen, onClose }) => {
   const handleFinishShop = () => {
     onClose();
     if (!user) {
-      setMessage("You need to log in to complete the purchase.");
       return;
     }
     router.push("/purchase");
@@ -53,7 +51,6 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
   const handleDelete = async (productId) => {
     if (!user) {
-      setMessage("You need to log in to modify your cart.");
       return;
     }
 
@@ -78,7 +75,6 @@ const CartSidebar = ({ isOpen, onClose }) => {
         );
       } catch (error) {
         console.error("Error deleting item:", error);
-        setMessage("Failed to delete item.");
       } finally {
         setAnimatingItemId(null);
       }
@@ -104,7 +100,12 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
       <div className="p-6 overflow-y-auto max-h-[80vh]">
         {loading ? (
-          <TuguAnimation />
+          <div className="w-full min-h-screen flex items-center justify-center">
+            <img
+              className="flex w-fit h-fit mb-48 ml-3 justify-center items-center"
+              src="/AnimationCart.gif"
+            ></img>
+          </div>
         ) : cartItems.length > 0 ? (
           <ul className="space-y-4">
             {cartItems.map((item) => (
@@ -145,7 +146,6 @@ const CartSidebar = ({ isOpen, onClose }) => {
         >
           Finish the Shop
         </button>
-        {message && <p className="text-center text-red-500 mt-4">{message}</p>}
       </div>
     </div>
   );

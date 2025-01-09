@@ -11,6 +11,7 @@ export async function generateEmbedding(productText, retries = 3) {
       if (attempt > 0) {
         const waitTime = 1000 * Math.pow(2, attempt - 1);
         console.warn(
+          
           `[generateEmbedding] attempt #${
             attempt + 1
           }, waiting ${waitTime} ms before retry...`

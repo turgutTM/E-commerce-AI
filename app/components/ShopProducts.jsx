@@ -20,7 +20,7 @@ const ShopProducts = () => {
   const [hoverRatings, setHoverRatings] = useState({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const productsPerPage = 10;
+  const productsPerPage =12;
   let quantity = 1;
 
   const dispatch = useDispatch();
@@ -162,7 +162,7 @@ const ShopProducts = () => {
             className="w-full p-2 text-gray-800 placeholder-gray-400 bg-white border border-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-500 transition-all duration-300"
           />
         </div>
-        <div className="grid grid-cols-5 gap-6 mb-4">
+        <div className="flex flex-wrap gap-8 mb-4">
           <AnimatePresence>
             {currentProducts.map((product) => (
               <motion.div
