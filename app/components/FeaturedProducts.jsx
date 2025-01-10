@@ -21,11 +21,11 @@ const FeaturedProducts = () => {
   console.log("current id is" + reduxCurrentProductId);
 
   useEffect(() => {
-    // Redux’tan gelen değer varsa
+  
     if (reduxCurrentProductId) {
-      // LocalStorage’a yaz
+     
       localStorage.setItem("lastViewedProductId", reduxCurrentProductId);
-      // State’i güncelle
+   
       setCurrentProductId(reduxCurrentProductId);
     } else {
     }

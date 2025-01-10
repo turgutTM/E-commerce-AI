@@ -26,46 +26,7 @@ const ProductPage = () => {
   const user = useSelector((state) => state.user.user);
   const userId = user ? user._id : null;
 
-  useEffect(() => {
-    const recordProductView = async () => {
-      if (!userId) {
-        console.warn("User not logged in, cannot record product view.");
-        return;
-      }
 
-      try {
-        await axios.post(`/api/add-product-view/${id}`, {
-          userId,
-        });
-        console.log("Product view recorded successfully.");
-        ;
-      } catch (error) {
-        console.error("Error recording product view:", error);
-      }
-    };
-
-    recordProductView();
-  }, [id, userId]);
-
-  useEffect(() => {
-    const recordUserView = async () => {
-      if (!userId) {
-        console.warn("User not logged in, cannot record product view.");
-        return;
-      }
-
-      try {
-        await axios.post(`/api/add-user-view/${userId}`, {
-          productId: id,
-        });
-        console.log("Product view recorded successfully.");
-      } catch (error) {
-        console.error("Error recording product view:", error);
-      }
-    };
-
-    recordUserView();
-  }, []);
 
   const handleAddToCart = async (productId) => {
     if (!userId) {
