@@ -27,62 +27,17 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: 10000,
     },
-    viewedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-    cart: [
-      {
-        productId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-        },
-        quantity: {
-          type: Number,
-          default: 1,
-        },
-        price: {
-          type: String,
-        },
-      },
-    ],
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
     },
-    wishlist: [
-      {
-        productId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-        },
-      },
-    ],
-    orders: [
-      {
-        orderDate: {
-          type: Date,
-          default: Date.now,
-        },
-        products: [
-          {
-            productId: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "Product",
-            },
-            quantity: Number,
-            price: Number,
-          },
-        ],
-        totalAmount: {
-          type: Number,
-          required: true,
-        },
-        status: {
-          type: String,
-          enum: ["pending", "completed", "shipped", "cancelled"],
-          default: "pending",
-        },
-      },
-    ],
+
+    lastViewedProduct: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -105,6 +60,11 @@ UserSchema.methods.deductBalance = async function (amount) {
   } else {
     throw new Error("Insufficient balance to complete the purchase.");
   }
+};
+
+UserSchema.methods.setLastViewedProduct = async function (productId) {
+  this.lastViewedProduct = productId;
+  await this.save();
 };
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);

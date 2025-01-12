@@ -5,9 +5,9 @@ import { MdArrowBack } from "react-icons/md";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/app/features/ShopCart";
+import { setUser } from "@/app/features/UserSlice";
 import TuguAnimation from "../../components/TuguAnimation";
 import Link from "next/link";
-import { setCurrentProduct } from "../../features/ProductSlice";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -18,13 +18,9 @@ const ProductPage = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [scrolled, setScrolled] = useState(false);
   const dispatch = useDispatch();
-  const reduxCurrentProductId = useSelector(
-    (state) => state.product.currentProduct
-  );
+
   const user = useSelector((state) => state.user.user);
   const userId = user ? user._id : null;
-
-
 
   const handleAddToCart = async (productId) => {
     if (!userId) {
@@ -67,8 +63,6 @@ const ProductPage = () => {
       try {
         const response = await axios.get(`/api/single-product/${id}`);
         setProduct(response.data);
-        dispatch(setCurrentProduct(id));
-        localStorage.setItem("lastViewedProductId", reduxCurrentProductId);
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {
@@ -85,9 +79,28 @@ const ProductPage = () => {
         console.error("Error fetching related products:", error);
       }
     };
+    const updateLastViewedProduct = async () => {
+      if (userId && id) {
+        try {
+          const response = await axios.put(
+            `/api/last-viewed-product/${userId}`,
+            {
+              lastViewedProduct: id,
+            }
+          );
+
+          if (response.data) {
+            dispatch(setUser(response.data.user));
+          }
+        } catch (error) {
+          console.error("Error updating last viewed product:", error);
+        }
+      }
+    };
 
     fetchProduct();
     fetchRelatedProducts();
+    updateLastViewedProduct();
     window.scrollTo({
       top: 0,
       behavior: "smooth",

@@ -12,33 +12,19 @@ import Link from "next/link";
 const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const reduxCurrentProductId = useSelector(
-    (state) => state.product.currentProduct
-  );
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
-  const [currentProductId, setCurrentProductId] = useState(null);
-  console.log("current id is" + reduxCurrentProductId);
-
-  useEffect(() => {
-    if (reduxCurrentProductId) {
-      localStorage.setItem("lastViewedProductId", reduxCurrentProductId);
-
-      setCurrentProductId(reduxCurrentProductId);
-    } else {
-      const lastViewedId = localStorage.getItem("lastViewedProductId");
-      if (lastViewedId) {
-        setCurrentProductId(lastViewedId);
-      }
-    }
-  }, [reduxCurrentProductId]);
+  console.log(user.lastViewedProduct);
+  
+  
+ 
 
   useEffect(() => {
     const fetchRecommendedProducts = async () => {
-      if (!currentProductId) return;
-      try {
+      if (!user.lastViewedProduct) return;
+      try { 
         const response = await axios.get(
-          `/api/recommendations/${currentProductId}`
+          `/api/recommendations/${user.lastViewedProduct}`
         );
         setProducts(response.data);
       } catch (error) {
@@ -49,7 +35,7 @@ const FeaturedProducts = () => {
     };
 
     fetchRecommendedProducts();
-  }, [currentProductId]);
+  }, [user.lastViewedProduct]);
 
   const addToCartHandler = async (product) => {
     try {
@@ -75,7 +61,7 @@ const FeaturedProducts = () => {
   }
 
   return (
-    <div className="flex justify-center w-full pb-20 bg-gray-100">
+    <div className="flex justify-center w-full pb-20 bg-[#f2f6f1]">
       <div className="flex flex-col items-center mt-7">
         <div>
           <p className="text-[3.2rem] font-bold">

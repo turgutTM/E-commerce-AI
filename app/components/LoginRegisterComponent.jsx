@@ -22,7 +22,7 @@ const LoginRegisterComponent = () => {
             "Sign Up for Newsletters"
           )}
         </p>
-        <p className="text-white font-medium">
+        <p className="text-white text-center font-medium">
           <span className="opacity-85">
             Activate add cart, shop, blogs, and enjoy
           </span>{" "}
