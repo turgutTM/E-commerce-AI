@@ -1,7 +1,7 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { MdArrowDropDown, MdArrowBack } from "react-icons/md";
+import { MdArrowBack } from "react-icons/md";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/app/features/ShopCart";
@@ -12,10 +12,8 @@ import { setCurrentProduct } from "../../features/ProductSlice";
 const ProductPage = () => {
   const { id } = useParams();
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1);
   const [selectedStorage, setSelectedStorage] = useState(128);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [scrolled, setScrolled] = useState(false);

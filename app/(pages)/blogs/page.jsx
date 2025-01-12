@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { ClipLoader } from "react-spinners";
 import { UploadButton } from "../../utils/uploadthing";
 import TuguAnimation from "@/app/components/TuguAnimation";
 import { FaRegHeart } from "react-icons/fa";
@@ -11,9 +10,7 @@ import { IoHeart } from "react-icons/io5";
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [blogPhoto, setBlogPhoto] = useState("");
   const [error, setError] = useState(null);
-  const [likedBlogs, setLikedBlogs] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const user = useSelector((state) => state.user.user);

@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../features/UserSlice";
 import { IoIosLogOut } from "react-icons/io";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import { setCartItems } from "../features/ShopCart";
 
 const Navbar = () => {
   const [activePage, setActivePage] = useState("/");
@@ -22,7 +21,6 @@ const Navbar = () => {
   const cartItems = useSelector((state) => state.ShopCart.cartItems);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-  const userId = user?._id;
   const cartIconRef = useRef(null);
 
   useEffect(() => {

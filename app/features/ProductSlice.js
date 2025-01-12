@@ -27,13 +27,13 @@ const productSlice = createSlice({
       state.products = state.products.filter((prod) => prod.id !== productId);
     },
     clearProducts: (state) => {
-      state.products = []; // Tüm ürünleri temizle
+      state.products = []; 
     },
     setCurrentProduct: (state, action) => {
       state.currentProduct = action.payload;
     },
     clearCurrentProduct: (state) => {
-      state.currentProduct = null; // Şu anda görüntülenen ürünü temizle
+      state.currentProduct = null; 
     },
   },
 });

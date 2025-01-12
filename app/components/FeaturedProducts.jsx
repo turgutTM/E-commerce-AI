@@ -21,13 +21,15 @@ const FeaturedProducts = () => {
   console.log("current id is" + reduxCurrentProductId);
 
   useEffect(() => {
-  
     if (reduxCurrentProductId) {
-     
       localStorage.setItem("lastViewedProductId", reduxCurrentProductId);
-   
+
       setCurrentProductId(reduxCurrentProductId);
     } else {
+      const lastViewedId = localStorage.getItem("lastViewedProductId");
+      if (lastViewedId) {
+        setCurrentProductId(lastViewedId);
+      }
     }
   }, [reduxCurrentProductId]);
 
@@ -76,7 +78,9 @@ const FeaturedProducts = () => {
     <div className="flex justify-center w-full pb-20 bg-gray-100">
       <div className="flex flex-col items-center mt-7">
         <div>
-          <p className="text-[3.2rem] font-bold">Recommended Products for you</p>
+          <p className="text-[3.2rem] font-bold">
+            Recommended Products for you
+          </p>
         </div>
         <div>
           <p className="mt-2 text-gray-400 text-same font-semibold">
@@ -92,11 +96,11 @@ const FeaturedProducts = () => {
               >
                 <div className="bg-gray-200 rounded-xl w-full h-60 justify-center flex">
                   <Link href={`/product/${product._id}`}>
-                  <img
-                    className="h-full w-full cursor-pointer rounded-lg object-cover"
-                    src={product.imgURL || "/placeholder.png"}
-                    alt={product.name}
-                  />
+                    <img
+                      className="h-full w-full cursor-pointer rounded-lg object-cover"
+                      src={product.imgURL || "/placeholder.png"}
+                      alt={product.name}
+                    />
                   </Link>
                 </div>
                 <div className="flex flex-col gap-1 mt-6">
@@ -106,7 +110,7 @@ const FeaturedProducts = () => {
                       <FaStar key={i} />
                     ))}
                   </p>
-                  <div className="flex w-full justify-between"> 
+                  <div className="flex w-full justify-between">
                     <p className="font-bold opacity-90">${product.price}</p>
                     <button
                       className="bg-gray-200 hover:bg-red-500 mb-3 hover:text-white duration-200 rounded-3xl p-3"

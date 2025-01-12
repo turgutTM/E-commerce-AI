@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { MdDeleteOutline } from "react-icons/md";
 import { removeFromCart } from "../features/ShopCart";
-import TuguAnimation from "./TuguAnimation";
 
 const CartSidebar = ({ isOpen, onClose }) => {
   const user = useSelector((state) => state.user.user);

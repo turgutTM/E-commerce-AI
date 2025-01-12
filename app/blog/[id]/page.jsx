@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import ClipLoader from "react-spinners/ClipLoader";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -41,7 +40,6 @@ const Blog = () => {
     fetchBlog();
   }, [id]);
   const handleLike = async (blogId) => {
-    // Sadece local state'te toggle yapıyoruz
     if (blog.likes.includes(user._id)) {
       setBlog((prevBlog) => ({
         ...prevBlog,
@@ -53,22 +51,16 @@ const Blog = () => {
         likes: [...prevBlog.likes, user._id],
       }));
     }
-  
-    // API isteği gönderiyoruz ama sonucu UI'a yansıtmıyoruz
+
     try {
       await axios.post("/api/like-post", {
         blogId,
         userId: user._id,
       });
-      // Burada gelen cevabı tekrar setBlog ile güncellemek yerine
-      // hiçbir şey yapmıyoruz, böylece “anlık değişim” korunmuş oluyor.
     } catch (error) {
       console.error("Error liking/unliking blog:", error);
-      // Eğer isterseniz hatada eski haline döndürmeyi de kaldırabilirsiniz.
     }
   };
-  
-  
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;

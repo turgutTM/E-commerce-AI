@@ -1,7 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ClipLoader } from "react-spinners";
-import Navbar from "@/app/components/Navbar";
 import Header from "./components/Header";
 import FeaturedProducts from "./components/FeaturedProducts";
 import BetweenComponent from "./components/BetweenComponent";

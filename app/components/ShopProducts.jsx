@@ -5,7 +5,7 @@ import { RiShoppingCartLine } from "react-icons/ri";
 import Link from "next/link";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import TuguAnimation from "./TuguAnimation";
 import EditProductModal from "./EditProductModal";
 import { setProduct } from "../features/ProductSlice";
@@ -20,7 +20,7 @@ const ShopProducts = () => {
   const [hoverRatings, setHoverRatings] = useState({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const productsPerPage =12;
+  const productsPerPage = 12;
   let quantity = 1;
 
   const dispatch = useDispatch();
@@ -163,142 +163,130 @@ const ShopProducts = () => {
           />
         </div>
         <div className="flex flex-wrap gap-8 mb-4">
-          <AnimatePresence>
-            {currentProducts.map((product) => (
-              <motion.div
-                key={product._id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.5 }}
-                className="relative flex justify-center"
-              >
-                <Link href={`/product/${product._id}`} passHref>
-                  <div className="flex flex-col rounded-xl gap-2 p-2 w-[18rem] h-[26rem] border-2 bg-white border-gray-300 transition-transform duration-300">
-                    <div className="bg-white w-full rounded-t-xl">
-                      <div className="w-full flex justify-between items-center mb-1 ">
-                        {product.discountPercentage > 0 && (
-                          <FaPercentage className="text-yellow-500 text-[13px]" />
-                        )}
-                      </div>
-                      <div className="relative h-[15rem] w-full">
-                        {product.stock === 0 && (
-                          <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center rounded-xl z-20 bg-black bg-opacity-40">
-                            <span className="text-white font-bold text-xl">
-                              Sold Out
-                            </span>
-                          </div>
-                        )}
-                        <img
-                          className={`h-full w-full rounded-lg object-cover ${
-                            product.stock === 0 ? "opacity-50" : ""
-                          }`}
-                          src={product.imgURL || "/iphone16.webp"}
-                          alt={product.name}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col h-[12rem] justify-center w-full items-start gap-1">
-                      <p className="opacity-80">{product.name}</p>
-                      <div className="text-yellow-500 flex">
-                        {Array.from({ length: 5 }).map((_, index) => (
-                          <FaStar
-                            key={index}
-                            className={`cursor-pointer ${
-                              index <
-                              (hoverRatings[product._id] ?? product.stars)
-                                ? "text-yellow-500"
-                                : "text-gray-300"
-                            }`}
-                            onMouseEnter={() =>
-                              handleMouseEnter(product._id, index + 1)
-                            }
-                            onMouseLeave={() => handleMouseLeave(product._id)}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              rateProduct(product._id, index + 1);
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <p className="text-sm text-gray-600">
-                        {product.votes || 0} votes
-                      </p>
-                      <div className="flex w-full justify-between">
-                        <div className="flex gap-2">
-                          {product.discountedPrice &&
-                          product.discountedPrice > 0 ? (
-                            <>
-                              <p className="line-through text-gray-700 opacity-70">
-                                ${product.price.toFixed(2)}
-                              </p>
-                              <p className="text-black font-bold opacity-90">
-                                ${product.discountedPrice.toFixed(2)}
-                              </p>
-                            </>
-                          ) : (
-                            <p className="font-bold opacity-90">
-                              ${product.price.toFixed(2)}
-                            </p>
-                          )}
-                        </div>
-                        {product.stock === 0 ? (
-                          <button
-                            className="bg-gray-200 text-gray-500 mb-3 p-1 rounded-3xl cursor-not-allowed"
-                            disabled
-                          >
-                            :(
-                          </button>
-                        ) : user.role === "admin" ? (
-                          <div className="flex gap-2">
-                            <button
-                              className="hover:text-blue-500 mb-3 duration-200 rounded-3xl p-1"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                openEditModal(product);
-                              }}
-                            >
-                              <FaEdit />
-                            </button>
-                            <button
-                              className="hover:text-red-500 mb-3 duration-200 rounded-3xl p-1"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                deleteProduct(product._id);
-                              }}
-                            >
-                              {deletingProduct === product._id ? (
-                                <motion.div
-                                  initial={{ scale: 1, rotate: 0 }}
-                                  animate={{ scale: 1.1, rotate: 360 }}
-                                  exit={{ scale: 0, opacity: 0 }}
-                                  className="text-red-500"
-                                >
-                                  <FaTrash />
-                                </motion.div>
-                              ) : (
-                                <FaTrash />
-                              )}
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            className="bg-gray-200 hover:bg-red-500 mb-3 hover:text-white duration-200 rounded-3xl p-3"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              addToCartHandler(product);
-                            }}
-                          >
-                            <RiShoppingCartLine />
-                          </button>
-                        )}
-                      </div>
-                    </div>
+          {currentProducts.map((product) => (
+            <Link href={`/product/${product._id}`} passHref>
+              <div className="flex flex-col rounded-xl gap-2 p-2 w-[18rem] h-[26rem] border-2 bg-white border-gray-300 transition-transform duration-300">
+                <div className="bg-white w-full rounded-t-xl">
+                  <div className="w-full flex justify-between items-center mb-1 ">
+                    {product.discountPercentage > 0 && (
+                      <FaPercentage className="text-yellow-500 text-[13px]" />
+                    )}
                   </div>
-                </Link>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                  <div className="relative h-[15rem] w-full">
+                    {product.stock === 0 && (
+                      <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center rounded-xl z-20 bg-black bg-opacity-40">
+                        <span className="text-white font-bold text-xl">
+                          Sold Out
+                        </span>
+                      </div>
+                    )}
+                    <img
+                      className={`h-full w-full rounded-lg object-cover ${
+                        product.stock === 0 ? "opacity-50" : ""
+                      }`}
+                      src={product.imgURL || "/iphone16.webp"}
+                      alt={product.name}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col h-[12rem] justify-center w-full items-start gap-1">
+                  <p className="opacity-80">{product.name}</p>
+                  <div className="text-yellow-500 flex">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <FaStar
+                        key={index}
+                        className={`cursor-pointer ${
+                          index < (hoverRatings[product._id] ?? product.stars)
+                            ? "text-yellow-500"
+                            : "text-gray-300"
+                        }`}
+                        onMouseEnter={() =>
+                          handleMouseEnter(product._id, index + 1)
+                        }
+                        onMouseLeave={() => handleMouseLeave(product._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          rateProduct(product._id, index + 1);
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    {product.votes || 0} votes
+                  </p>
+                  <div className="flex w-full justify-between">
+                    <div className="flex gap-2">
+                      {product.discountedPrice &&
+                      product.discountedPrice > 0 ? (
+                        <>
+                          <p className="line-through text-gray-700 opacity-70">
+                            ${product.price.toFixed(2)}
+                          </p>
+                          <p className="text-black font-bold opacity-90">
+                            ${product.discountedPrice.toFixed(2)}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="font-bold opacity-90">
+                          ${product.price.toFixed(2)}
+                        </p>
+                      )}
+                    </div>
+                    {product.stock === 0 ? (
+                      <button
+                        className="bg-gray-200 text-gray-500 mb-3 p-1 rounded-3xl cursor-not-allowed"
+                        disabled
+                      >
+                        :(
+                      </button>
+                    ) : user.role === "admin" ? (
+                      <div className="flex gap-2">
+                        <button
+                          className="hover:text-blue-500 mb-3 duration-200 rounded-3xl p-1"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openEditModal(product);
+                          }}
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          className="hover:text-red-500 mb-3 duration-200 rounded-3xl p-1"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            deleteProduct(product._id);
+                          }}
+                        >
+                          {deletingProduct === product._id ? (
+                            <motion.div
+                              initial={{ scale: 1, rotate: 0 }}
+                              animate={{ scale: 1.1, rotate: 360 }}
+                              exit={{ scale: 0, opacity: 0 }}
+                              className="text-red-500"
+                            >
+                              <FaTrash />
+                            </motion.div>
+                          ) : (
+                            <FaTrash />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="bg-gray-200 hover:bg-red-500 mb-3 hover:text-white duration-200 rounded-3xl p-3"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCartHandler(product);
+                        }}
+                      >
+                        <RiShoppingCartLine />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
         <div className="flex-container">
           <div> currentPage : {currentPage} </div>

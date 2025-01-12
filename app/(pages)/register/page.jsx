@@ -4,7 +4,6 @@ import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
 
 const Register = () => {
   const [email, setEmail] = useState("");
